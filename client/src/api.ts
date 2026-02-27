@@ -1,6 +1,7 @@
 import type { Battle, ActionResult, Character } from "./types";
 
-const BASE = "/api";
+const envBase = (import.meta.env.VITE_API_URL as string) ?? "";
+const BASE = (envBase.endsWith("/") ? envBase.slice(0, -1) : envBase) + "/api";
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const token = localStorage.getItem("authToken");

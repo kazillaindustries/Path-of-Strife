@@ -7,10 +7,13 @@ import authRouter from "./routes/auth";
 import { authMiddleware } from "./middleware/auth";
 import { rateLimitMiddleware } from "./middleware/rateLimit";
 import { prisma } from "./lib/prisma";
+import cors from "cors";
 
 const app = express();
 
 app.use(express.json());
+// allow CORS from the frontend 
+app.use(cors({ origin: true }));
 app.use(rateLimitMiddleware);
 
 // public auth endpoints (no token required)
