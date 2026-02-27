@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch src --exec ts-node src/index.ts",
     "prebuild": "node -e \"if(!process.env.DATABASE_URL){console.error('DATABASE_URL missing'); process.exit(1)}\"",
-    "build": "npx prisma generate && npx tsc --outDir dist --rootDir src",
+    "build": "npx prisma generate && npx tsc --project tsconfig.json --outDir dist",
     "format": "prettier \"src/**/*.{ts,js,tsx,jsx}\" --write && npx prisma format",
     "start": "node dist/index.js"
   },

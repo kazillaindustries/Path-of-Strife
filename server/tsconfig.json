@@ -41,4 +41,15 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   }
+  ,
+  "include": [
+    "src/**/*",
+    "prisma.config.ts",
+    "cleanup-stuck-runs.ts",
+    "scripts/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
