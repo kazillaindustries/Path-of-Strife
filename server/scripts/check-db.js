@@ -19,13 +19,16 @@ async function run() {
     const password = decodeURIComponent(u.password || "");
     const database = (u.pathname || "").replace(/^\//, "") || undefined;
 
-    // Prefer IPv4 by resolving an A record explicitly
-    const addresses = await dns.lookup(host, { family: 4, all: true });
+    // Prefer IPv4 by resolving A records explicitly
+    const addresses = await dns.resolve4(host);
     if (!addresses || addresses.length === 0) {
       throw new Error(`No IPv4 addresses found for host ${host}`);
     }
-    const ipv4 = addresses[0].address;
+    const ipv4 = addresses[0];
+    console.log('Resolved IPv4 addresses:', addresses.join(', '));
+    console.log('NODE_OPTIONS:', process.env.NODE_OPTIONS || '<unset>');
 
+    console.log(`Attempting connection to ${ipv4}:${port} as user ${user}`);
     const client = new Client({
       host: ipv4,
       port,
