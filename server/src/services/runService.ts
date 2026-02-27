@@ -536,8 +536,8 @@ async function createNextBattle(runId: string, previousBattleId?: string) {
       include: { participants: { include: { character: true } } },
     });
 
-    participantOverrides = prevBattle.participants.map((p) => {
-      const char = p.character;
+    participantOverrides = prevBattle.participants.map((p: any) => {
+      const char = p.character as any;
 
       // full heal blessing overrides everything
       if (blessings.includes("fullHeal")) {
@@ -581,7 +581,7 @@ async function createNextBattle(runId: string, previousBattleId?: string) {
     });
   } else {
     // first battle
-    participantOverrides = run.party.members.map((m) => ({
+    participantOverrides = run.party.members.map((m: any) => ({
       characterId: m.characterId,
       currentHp: m.character.maxHp,
       currentMana: m.character.maxMana,

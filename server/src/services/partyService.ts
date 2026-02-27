@@ -91,7 +91,7 @@ export async function addCharacterToParty(partyId: string, characterId: string) 
   });
 
   // block dupes
-  if (party.members.some((m) => m.characterId === characterId)) {
+  if (party.members.some((m: any) => m.characterId === characterId)) {
     throw new Error("Character is already in this party.");
   }
 
@@ -102,7 +102,7 @@ export async function addCharacterToParty(partyId: string, characterId: string) 
   });
 
   // calc max slots with everyone
-  const allChars = [...party.members.map((m) => m.character), newChar];
+  const allChars = [...party.members.map((m: any) => m.character), newChar];
   const maxSlots = getMaxPartySize(allChars);
 
   if (party.members.length + 1 > maxSlots) {
@@ -153,9 +153,9 @@ export async function getPartySlotInfo(partyId: string) {
     },
   });
 
-  const maxSlots = getMaxPartySize(party.members.map((m) => m.character));
+  const maxSlots = getMaxPartySize(party.members.map((m: any) => m.character));
   const bestWins =
-    party.members.length > 0 ? Math.max(...party.members.map((m) => m.character.battlesWon)) : 0;
+    party.members.length > 0 ? Math.max(...party.members.map((m: any) => m.character.battlesWon)) : 0;
 
   // find next slot unlock
   const sortedThresholds = Object.entries(PARTY_SLOT_UNLOCKS)
@@ -179,7 +179,7 @@ export async function deleteParty(partyId: string) {
     select: { id: true },
   });
 
-  const runIds = runs.map((r) => r.id);
+  const runIds = runs.map((r: any) => r.id);
 
   // nuke those run battles
   if (runIds.length > 0) {

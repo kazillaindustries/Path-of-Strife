@@ -125,7 +125,7 @@ export async function startBattle(params: {
     statusEffects: initialEffects ?? [],
     party: { connect: { id: partyId } },
     participants: {
-      create: party.members.map((m) => {
+      create: party.members.map((m: any) => {
         const override = overrideMap.get(m.characterId);
         return {
           character: { connect: { id: m.characterId } },
@@ -157,7 +157,7 @@ export async function getBattleById(battleId: string) {
 
   if (!battle) return null;
 
-  const enrichedParticipants = battle.participants.map((p) => {
+  const enrichedParticipants = battle.participants.map((p: any) => {
     const characterClass = p.character.class as CharacterClass;
     const abilities = getAbilitiesForClassAtLevel(characterClass, p.character.level);
     const passive = CLASS_PASSIVES[characterClass];
@@ -189,7 +189,7 @@ export async function useAbility(
   if (!battle) throw new Error("Battle not found");
   if (battle.finished) throw new Error("Battle is already over");
 
-  const participant = battle.participants.find((p) => p.characterId === characterId);
+  const participant = battle.participants.find((p: any) => p.characterId === characterId);
   if (!participant) throw new Error("Character not in this battle");
   if (participant.currentHp <= 0) throw new Error("Character is dead");
 
@@ -315,7 +315,7 @@ export async function useAbility(
 
       if (e.extraDamagePerAlly) {
         const aliveAllies = battle.participants.filter(
-          (p) => p.currentHp > 0 && p.characterId !== characterId,
+          (p: any) => p.currentHp > 0 && p.characterId !== characterId,
         ).length;
         if (aliveAllies > 0) {
           const extraDmg = rollDice(
@@ -401,7 +401,7 @@ export async function useAbility(
     let targetMaxHp = character.maxHp;
 
     if (targetAllyId) {
-      const targetParticipant = battle.participants.find((p) => p.characterId === targetAllyId);
+      const targetParticipant = battle.participants.find((p: any) => p.characterId === targetAllyId);
       if (!targetParticipant) {
         throw new Error(`Target ally not found`);
       }
@@ -720,7 +720,7 @@ export async function useAbility(
 
   if (allyHealed) {
     const allyMaxHp =
-      battle.participants.find((p) => p.characterId === allyHealed!.characterId)?.character.maxHp ??
+      battle.participants.find((p: any) => p.characterId === allyHealed!.characterId)?.character.maxHp ??
       0;
     const currentAllyHp = hpMap.get(allyHealed.characterId) ?? 0;
     const newAllyHp = Math.min(allyMaxHp, currentAllyHp + allyHealed.amount);
@@ -803,7 +803,7 @@ export async function useRecovery(
   if (!battle) throw new Error("Battle not found");
   if (battle.finished) throw new Error("Battle is already over");
 
-  const participant = battle.participants.find((p) => p.characterId === characterId);
+  const participant = battle.participants.find((p: any) => p.characterId === characterId);
   if (!participant) throw new Error("Character not in this battle");
   if (participant.currentHp <= 0) throw new Error("Character is dead");
 
@@ -889,7 +889,7 @@ export async function useBasicAttack(battleId: string, characterId: string, targ
   if (!battle) throw new Error("Battle not found");
   if (battle.finished) throw new Error("Battle is already over");
 
-  const participant = battle.participants.find((p) => p.characterId === characterId);
+  const participant = battle.participants.find((p: any) => p.characterId === characterId);
   if (!participant) throw new Error("Character not in this battle");
   if (participant.currentHp <= 0) throw new Error("Character is dead");
 
