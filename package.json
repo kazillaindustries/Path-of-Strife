@@ -1,0 +1,17 @@
+{
+  "name": "text-based-rpg-adventure",
+  "version": "1.0.0",
+  "description": "A WEB APP WITH ABSOLUTELY NO USEFUL FUNCTIONALITY, JUST FOR FUN",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "setup": "npm --prefix server install && npm --prefix client install",
+    "format": "concurrently \"npm run format:server\" \"npm run format:client\"",
+    "format:server": "cd server && npx prettier --write .",
+    "format:client": "cd client && npx prettier --write ."
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}

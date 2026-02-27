@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  name           String?
+  sessionToken   String?  @unique
+  parties        Party[]
+  createdAt      DateTime @default(now())
+}
+
+model Character {
+  id          String               @id @default(uuid())
+  name        String
+  class       String
+  avatarUrl   String?
+  level       Int                  @default(1)
+  xp          Int                  @default(0)
+  battlesWon  Int                  @default(0)
+  hp          Int
+  maxHp       Int
+  mana        Int
+  maxMana     Int
+  stamina     Int                  @default(0)
+  maxStamina  Int                  @default(0)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  parties     PartyCharacter[]
+  battles     BattleParticipant[]
+}
+
+model Party {
+  id        String           @id @default(uuid())
+  name      String
+  gold      Int              @default(0)
+  easyMode  Boolean          @default(false)
+  userId    String
+  user      User             @relation(fields: [userId], references: [id])
+  members   PartyCharacter[]
+  battles   Battle[]
+  runs      Run[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+model PartyCharacter {
+  partyId     String
+  characterId String
+
+  party       Party     @relation(fields: [partyId], references: [id])
+  character   Character @relation(fields: [characterId], references: [id])
+
+  @@id([partyId, characterId])
+}
+
+model Battle {
+  id           String   @id @default(uuid())
+  enemies      Json                // BattleEnemy[] — all enemies in this encounter
+  turn         Int                 @default(0)
+  finished     Boolean             @default(false)
+  won          Boolean             @default(false)
+  statusEffects Json?              // tracks all active effects (burn, poison, slow, etc.)
+  battleLog    Json                @default("[]") // BattleEvent[] — full event history for debugging
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  participants BattleParticipant[]
+  partyId      String?
+  party        Party?              @relation(fields: [partyId], references: [id])
+  runId        String?
+  run          Run?                @relation(fields: [runId], references: [id])
+}
+
+model BattleParticipant {
+  battleId    String
+  characterId String
+
+  currentHp      Int
+  currentMana    Int
+  currentStamina Int              @default(0)
+  hasActed       Boolean           @default(false)
+  toggles        Json?             // active toggles (e.g. frenzy)
+
+  battle      Battle    @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  character   Character @relation(fields: [characterId], references: [id])
+
+  @@id([battleId, characterId])
+}
+
+model Run {
+  id            String   @id @default(uuid())
+  partyId       String
+  party         Party    @relation(fields: [partyId], references: [id])
+  path          Json     // Array of stage names, one per area: ["Goblin Camp","Stone Cavern","Ember Wastes","Abyssal Gate"]
+  currentArea   Int      @default(0) // 0-3 index into AREAS
+  currentBattle Int      @default(0) // 0-2 (mob, mob, boss+ads)
+  finished      Boolean  @default(false)
+  won           Boolean  @default(false)
+  atRestStop    Boolean  @default(false)
+  blessings     Json?    // string[] of active blessing types (e.g. ["damageBuff","shield"])
+  battles       Battle[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
