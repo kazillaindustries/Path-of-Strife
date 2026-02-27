@@ -17,7 +17,7 @@ app.use(cors({ origin: true }));
 app.use(rateLimitMiddleware);
 
 // public auth endpoints (no token required)
-app.use("/auth", authRouter);
+app.use("/api/auth", authRouter);
 
 // all other routes require auth token
 // health check should be public and not hit the DB/auth middleware
@@ -27,15 +27,15 @@ app.get("/health", (_req, res) => {
 
 app.use(authMiddleware);
 
-app.use("/characters", charactersRouter);
-app.use("/parties", partiesRouter);
-app.use("/battles", battlesRouter);
-app.use("/runs", runsRouter);
+app.use("/api/characters", charactersRouter);
+app.use("/api/parties", partiesRouter);
+app.use("/api/battles", battlesRouter);
+app.use("/api/runs", runsRouter);
 
 app.get("/", (_req, res) => {
   res.json({
     message: "RPG API is running",
-    endpoints: ["/auth/join", "/characters", "/parties", "/battles", "/runs"],
+    endpoints: ["/api/auth/join", "/api/characters", "/api/parties", "/api/battles", "/api/runs"],
   });
 });
 
