@@ -17,6 +17,11 @@ app.use(rateLimitMiddleware);
 app.use("/auth", authRouter);
 
 // all other routes require auth token
+// health check should be public and not hit the DB/auth middleware
+app.get("/health", (_req, res) => {
+  res.json({ status: "ok" });
+});
+
 app.use(authMiddleware);
 
 app.use("/characters", charactersRouter);
@@ -31,9 +36,7 @@ app.get("/", (_req, res) => {
   });
 });
 
-app.get("/health", (_req, res) => {
-  res.json({ status: "ok" });
-});
+
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
