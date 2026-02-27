@@ -53,6 +53,7 @@ router.post("/join", async (req: Request, res: Response) => {
     const isDbNetworkError =
       error?.code === "P1001" ||
       error?.code === "ENETUNREACH" ||
+      error?.code === "NO_DB" ||
       /ENETUNREACH|ECONNREFUSED|connect ECONNREFUSED|timeout/i.test(msg);
 
     if (isDbNetworkError) {
