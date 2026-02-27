@@ -48,7 +48,18 @@ router.post("/join", async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error("Auth error:", error);
-    res.status(500).json({ error: error.message ?? "Failed to join" });
+    // common network / prisma errors when DB is unreachable
+    const msg = (error && (error.message || error.toString())) || "Failed to join";
+    const isDbNetworkError =
+      error?.code === "P1001" ||
+      error?.code === "ENETUNREACH" ||
+      /ENETUNREACH|ECONNREFUSED|connect ECONNREFUSED|timeout/i.test(msg);
+
+    if (isDbNetworkError) {
+      return res.status(503).json({ error: "Database unreachable (temporarily). Try again later." });
+    }
+
+    res.status(500).json({ error: msg });
   }
 });
 
