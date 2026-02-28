@@ -3,6 +3,10 @@ import type { Battle, ActionResult, Character } from "./types";
 const envBase = (import.meta.env.VITE_API_URL as string) ?? "";
 const BASE = (envBase.endsWith("/") ? envBase.slice(0, -1) : envBase) + "/api";
 
+// runtime debugging
+console.log("VITE_API_URL (build-time):", import.meta.env.VITE_API_URL);
+console.log("Computed API BASE:", BASE);
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const token = localStorage.getItem("authToken");
   const headers: HeadersInit = { "Content-Type": "application/json" };
