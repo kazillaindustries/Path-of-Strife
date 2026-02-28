@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import ReportBugButton from "./ReportBugButton";
 import { useNavigate } from "react-router-dom";
 import {
   getCharacters,
@@ -218,7 +219,8 @@ export function HomePage() {
             O struggler, go forth and conquer
           </p>
         </div>
-        <div className="relative">
+        <div className="relative flex items-center gap-2">
+          <ReportBugButton screen="home" context={{}} />
           <button
             onClick={handleLogout}
             onMouseEnter={() => setShowTooltip(true)}

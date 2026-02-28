@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import ReportBugButton from "./ReportBugButton";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   getActiveRun,
@@ -383,19 +384,22 @@ export function RunScreen() {
   // run in progress
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold">⚔️ Run Progress</h1>
           <p className="text-sm text-[var(--color-text-dim)]">
             {currentAreaName} — {currentStageName}
           </p>
         </div>
-        <button
-          onClick={() => navigate("/")}
-          className="text-xs text-[var(--color-text-dim)] hover:text-[var(--color-text)] cursor-pointer"
-        >
-          ← Home
-        </button>
+        <div className="flex items-center gap-2">
+          <ReportBugButton screen={run?.atRestStop ? "rest-stop" : "run"} context={{ runId: run?.id ?? null, partyId }} />
+          <button
+            onClick={() => navigate("/")}
+            className="text-xs text-[var(--color-text-dim)] hover:text-[var(--color-text)] cursor-pointer"
+          >
+            ← Home
+          </button>
+        </div>
       </div>
 
       {error && (

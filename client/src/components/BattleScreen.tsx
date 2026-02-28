@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import ReportBugButton from "./ReportBugButton";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import type { Battle, BattleEvent } from "../types";
 import { getBattle, useAbility, useBasicAttack, useRecovery } from "../api";
@@ -154,27 +155,7 @@ export function BattleScreen() {
     [battle, selectedCharacterId, handleResult],
   );
 
-  const handleReportBug = useCallback(async () => {
-    if (!battle) return;
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await fetch(`/api/battles/${battle.id}/bug-report`);
-      if (!response.ok) throw new Error("Failed to generate bug report");
-      const bugReport = await response.json();
-
-      // formatted nicely for the sake of my own sanity
-      const reportText = JSON.stringify(bugReport, null, 2);
-
-      // copy to clipboard
-      await navigator.clipboard.writeText(reportText);
-      alert("report copied to clipboard please send it to Petros love you <3");
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [battle]);
+  // report handled by ReportBugButton
 
   const handleContinue = useCallback(() => {
     if (runId) {
@@ -256,13 +237,7 @@ export function BattleScreen() {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleReportBug}
-            disabled={loading}
-            className="text-xs px-3 py-1.5 rounded font-bold bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent)]/90 disabled:opacity-40 cursor-pointer transition"
-          >
-            Report Bug
-          </button>
+          <ReportBugButton screen="battle" context={{ battleId: battle.id }} />
           <button
             onClick={() => {
               if (runId) {

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import ReportBugButton from "./ReportBugButton";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   getRun,
@@ -197,12 +198,13 @@ export function RunProgress() {
               Next: {currentAreaName} — {currentStageName}
             </p>
           </div>
-          <div className="text-right">
-            <div className="text-[var(--color-gold)] font-bold">
-              {shop.gold}g
+          <div className="text-right flex items-center gap-2">
+              <div className="text-[var(--color-gold)] font-bold">
+                {shop.gold}g
+              </div>
+              <div className="text-xs text-[var(--color-text-dim)]">Gold</div>
+              <ReportBugButton screen="rest-stop" context={{ runId: runId ?? null }} />
             </div>
-            <div className="text-xs text-[var(--color-text-dim)]">Gold</div>
-          </div>
         </div>
 
         {error && (
