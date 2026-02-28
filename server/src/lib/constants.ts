@@ -191,6 +191,7 @@ export interface AbilityEffect {
   selfWeakness?: { dice: number; sides: number; modifier?: number; turns: number };
   partyDamageBuff?: { percent: number; turns: number };
   selfDamageBuff?: { percent: number; turns: number };
+  targetDamageBuff?: { percent: number; turns: number };
   huntersMark?: { percent: number; turns: number };
   vulnerability?: { percent: number; turns: number };
   haste?: boolean;
@@ -224,7 +225,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 1,
       cost: 10,
       costType: "stamina",
-      description: "A powerful sword slash",
+      description: "A powerful sword slash\nDeals 5 to 15 damage.",
       effects: { damage: { dice: 2, sides: 6, modifier: 3 } },
     },
     {
@@ -232,9 +233,9 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 3,
       cost: 15,
       costType: "stamina",
-      description: "Bash with shield, dazing the target and reducing their damage",
+      description: "Bash with shield, dazing the target and reducing their damage\nDeals 3 to 10 damage.",
       effects: {
-        damage: { dice: 1, sides: 8, modifier: 2 },
+        damage: { dice: 2, sides: 8, modifier: 2 },
         bossDamageReduction: { percent: 50, turns: 1 },
       },
     },
@@ -243,10 +244,11 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 6,
       cost: 20,
       costType: "stamina",
-      description: "Rally yourself or a target ally, healing them and boosting your damage",
+      description:
+        "Rally yourself or an ally, increasing their damage.",
       effects: {
-        heal: { dice: 2, sides: 6, modifier: 5 },
         selfDamageBuff: { percent: 25, turns: 2 },
+        targetDamageBuff: { percent: 25, turns: 2 },
       },
     },
     {
@@ -254,8 +256,8 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 10,
       cost: 35,
       costType: "stamina",
-      description: "A devastating whirlwind of blades",
-      effects: { damage: { dice: 4, sides: 8, modifier: 5 }, aoe: true },
+      description: "A devastating whirlwind of blades\nDeals 11 to 41 damage.",
+      effects: { damage: { dice: 6, sides: 6, modifier: 5 }, aoe: true },
     },
   ],
 
@@ -265,7 +267,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 1,
       cost: 10,
       costType: "stamina",
-      description: "A wild axe swing",
+      description: "A wild axe swing\nDeals 4 to 14 damage.",
       effects: { damage: { dice: 2, sides: 6, modifier: 2 }, aoe: true },
     },
     {
@@ -281,7 +283,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 6,
       cost: 25,
       costType: "stamina",
-      description: "Furious strike that heals from bloodlust",
+      description: "Furious strike that heals from bloodlust\nDeals 5 to 19 damage.",
       effects: { damage: { dice: 2, sides: 8, modifier: 3 }, healPercent: 25 },
     },
     {
@@ -289,8 +291,8 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 10,
       cost: 40,
       costType: "stamina",
-      description: "Massive blow that damages self",
-      effects: { damage: { dice: 4, sides: 10 }, selfDamage: { dice: 2, sides: 6 } },
+      description: "Massive blow that damages self\nDeals 6 to 48 damage.",
+      effects: { damage: { dice: 6, sides: 8 }, selfDamage: { dice: 2, sides: 6 } },
     },
   ],
 
@@ -300,7 +302,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 1,
       cost: 10,
       costType: "stamina",
-      description: "Strike from the shadows with high crit chance",
+      description: "Strike from the shadows with high crit chance\nDeals 3 to 8 damage.",
       effects: { damage: { dice: 1, sides: 6, modifier: 2 }, critChance: 0.3 },
     },
     {
@@ -316,7 +318,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 6,
       cost: 20,
       costType: "stamina",
-      description: "Envenomed strike that poisons the target",
+      description: "Envenomed strike that poisons the target\nDeals 3 to 10 damage.",
       effects: {
         damage: { dice: 1, sides: 8, modifier: 2 },
         poison: { dice: 1, sides: 4, turns: 3 },
@@ -328,8 +330,8 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       cost: 35,
       costType: "stamina",
       description:
-        "Lethal strike, auto-crits if target is at full HP. Can't use abilities next turn.",
-      effects: { damage: { dice: 3, sides: 8 }, autoCritIfFullHP: true },
+        "Lethal strike, auto-crits if target is at full HP. Can't use abilities next turn.\nDeals 4 to 24 damage.",
+      effects: { damage: { dice: 4, sides: 6 }, autoCritIfFullHP: true },
     },
   ],
 
@@ -339,7 +341,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 1,
       cost: 10,
       costType: "stamina",
-      description: "A carefully aimed shot",
+      description: "A carefully aimed shot\nDeals 2 to 12 damage.",
       effects: { damage: { dice: 2, sides: 6 } },
     },
     {
@@ -355,7 +357,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 6,
       cost: 20,
       costType: "stamina",
-      description: "Pin the target, reducing their damage",
+      description: "Pin the target, reducing their damage\nDeals 3 to 10 damage.",
       effects: {
         damage: { dice: 1, sides: 8, modifier: 2 },
         bossDamageReduction: { percent: 25, turns: 2 },
@@ -366,8 +368,8 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 10,
       cost: 35,
       costType: "stamina",
-      description: "A devastating volley hitting all enemies",
-      effects: { damage: { dice: 4, sides: 6 }, aoe: true, hitTwiceIfMarked: true },
+      description: "A devastating volley hitting all enemies\nDeals 6 to 24 damage (hits twice if target is marked).",
+      effects: { damage: { dice: 6, sides: 4 }, aoe: true, hitTwiceIfMarked: true },
     },
   ],
 
@@ -378,7 +380,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 1,
       cost: 10,
       costType: "mana",
-      description: "Launch a bolt of fire that burns",
+      description: "Launch a bolt of fire that burns\nDeals 4 to 14 damage.",
       effects: {
         damage: { dice: 2, sides: 6, modifier: 2 },
         burn: { dice: 1, sides: 4, turns: 2 },
@@ -389,7 +391,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 3,
       cost: 15,
       costType: "mana",
-      description: "Blast of frost that slows the target",
+      description: "Blast of frost that slows the target\nDeals 1 to 8 damage.",
       effects: { damage: { dice: 1, sides: 8 }, slow: { turns: 2 } },
     },
     {
@@ -397,7 +399,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 6,
       cost: 25,
       costType: "mana",
-      description: "A powerful bolt of lightning",
+      description: "A powerful bolt of lightning\nDeals 3 to 24 damage.",
       effects: { damage: { dice: 3, sides: 8 } },
     },
     {
@@ -405,8 +407,8 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 10,
       cost: 40,
       costType: "mana",
-      description: "Summon a meteor, crashing down on all enemies",
-      effects: { damage: { dice: 5, sides: 8, modifier: 5 }, aoe: true },
+      description: "Summon a meteor, crashing down on all enemies\nDeals 12 to 47 damage.",
+      effects: { damage: { dice: 7, sides: 6, modifier: 5 }, aoe: true },
     },
   ],
 
@@ -432,7 +434,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 6,
       cost: 25,
       costType: "mana",
-      description: "Holy damage, extra per living ally",
+      description: "Holy damage, extra per living ally\nDeals 2 to 16 damage.",
       effects: { damage: { dice: 2, sides: 8 }, extraDamagePerAlly: { dice: 1, sides: 6 } },
     },
     {
@@ -462,7 +464,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 3,
       cost: 18,
       costType: "mana",
-      description: "Drain the targets life force",
+      description: "Drain the targets life force\nDeals 2 to 12 damage.",
       effects: { damage: { dice: 2, sides: 6 }, healPercent: 50 },
     },
     {
@@ -470,7 +472,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 6,
       cost: 28,
       costType: "mana",
-      description: "Summons a whirling darkness that curses all enemies",
+      description: "Summons a whirling darkness that curses all enemies\nDeals 1 to 8 damage.",
       effects: {
         damage: { dice: 1, sides: 8 },
         aoe: true,
@@ -482,9 +484,9 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 10,
       cost: 40,
       costType: "mana",
-      description: "Rip the soul from the target, but at a cost",
+      description: "Rip the soul from the target, but at a cost\nDeals 6 to 36 damage.",
       effects: {
-        damage: { dice: 4, sides: 8 },
+        damage: { dice: 6, sides: 6 },
         healPercent: 75,
         selfWeakness: { dice: 1, sides: 4, modifier: 2, turns: 3 },
       },
@@ -497,7 +499,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 1,
       cost: 12,
       costType: "mana",
-      description: "Strike with primal claws",
+      description: "Strike with primal claws\nDeals 2 to 9 damage.",
       effects: { damage: { dice: 1, sides: 8, modifier: 1 } },
     },
     {
@@ -513,7 +515,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 6,
       cost: 24,
       costType: "mana",
-      description: "Thorned vines entangle the target, weakening attacks",
+      description: "Thorned vines entangle the target, weakening attacks\nDeals 1 to 8 damage.",
       effects: { damage: { dice: 1, sides: 8 }, bossDamageReduction: { percent: 40, turns: 2 } },
     },
     {
@@ -521,9 +523,9 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 10,
       cost: 38,
       costType: "mana",
-      description: "Toxic spore cloud that poisons all enemies",
+      description: "Toxic spore cloud that poisons all enemies\nDeals 3 to 12 damage.",
       effects: {
-        damage: { dice: 2, sides: 6 },
+        damage: { dice: 3, sides: 4 },
         aoe: true,
         poison: { dice: 1, sides: 4, turns: 3 },
       },
@@ -537,7 +539,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 1,
       cost: 10,
       costType: "stamina",
-      description: "Holy strike that blinds the target",
+      description: "Holy strike that blinds the target\nDeals 4 to 14 damage.",
       effects: { damage: { dice: 2, sides: 6, modifier: 2 }, blind: { chance: 0.5, turns: 2 } },
     },
     {
@@ -553,7 +555,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 6,
       cost: 20,
       costType: "stamina",
-      description: "Strike with conviction and prejudice",
+      description: "Strike with conviction and prejudice\nDeals 4 to 18 damage.",
       effects: { damage: { dice: 2, sides: 8, modifier: 2 } },
     },
     {
@@ -561,9 +563,9 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 10,
       cost: 40,
       costType: "mana",
-      description: "Holy judgment that damages, heals, and protects",
+      description: "Holy judgment that damages, heals, and protects\nDeals 6 to 24 damage.",
       effects: {
-        damage: { dice: 4, sides: 6 },
+        damage: { dice: 6, sides: 4 },
         healPercent: 50,
         bossDamageReduction: { percent: 25, turns: 2 },
       },
@@ -576,7 +578,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 1,
       cost: 10,
       costType: "stamina",
-      description: "Flame-infused blade strike",
+      description: "Flame-infused blade strike\nDeals 4 to 18 damage.",
       effects: {
         damage: { dice: 2, sides: 8, modifier: 2 },
         burn: { dice: 1, sides: 4, turns: 2 },
@@ -587,7 +589,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 3,
       cost: 15,
       costType: "mana",
-      description: "A blast of arcane energy",
+      description: "A blast of arcane energy\nDeals 2 to 16 damage.",
       effects: { damage: { dice: 2, sides: 8 } },
     },
     {
@@ -595,7 +597,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 6,
       cost: 20,
       costType: "stamina",
-      description: "Releases waves of cutting wind",
+      description: "Releases waves of cutting wind\nHits twice, each dealing 5 to 15 damage.",
       effects: { damage: { dice: 2, sides: 6, modifier: 3 }, hitTwice: true },
     },
     {
@@ -603,8 +605,8 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 10,
       cost: 40,
       costType: "mana",
-      description: "Massive arcane explosion hitting all enemies",
-      effects: { damage: { dice: 5, sides: 8 }, aoe: true },
+      description: "Massive arcane explosion hitting all enemies\nDeals 7 to 42 damage.",
+      effects: { damage: { dice: 7, sides: 6 }, aoe: true },
     },
   ],
 
@@ -614,7 +616,7 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 1,
       cost: 10,
       costType: "stamina",
-      description: "Dark blade strike that weakens the target",
+      description: "Dark blade strike that weakens the target\nDeals 4 to 14 damage.",
       effects: { damage: { dice: 2, sides: 6, modifier: 2 } },
     },
     {
@@ -641,8 +643,8 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 10,
       cost: 40,
       costType: "mana",
-      description: "Engulf target in darkness, making them cold and vulnerable",
-      effects: { damage: { dice: 4, sides: 6 }, vulnerability: { percent: 25, turns: 3 } },
+      description: "Engulf target in darkness, making them cold and vulnerable\nDeals 6 to 24 damage.",
+      effects: { damage: { dice: 6, sides: 4 }, vulnerability: { percent: 25, turns: 3 } },
     },
   ],
 
@@ -676,9 +678,9 @@ export const CLASS_ABILITIES: Record<CharacterClass, Ability[]> = {
       unlockLevel: 10,
       cost: 42,
       costType: "mana",
-      description: "The ultimate performance, dealing damage and buffing the entire party",
+      description: "The ultimate performance, dealing damage and buffing the entire party\nDeals 6 to 18 damage.",
       effects: {
-        damage: { dice: 4, sides: 4 },
+        damage: { dice: 6, sides: 3 },
         partyDamageBuff: { percent: 40, turns: 1 },
         heal: { dice: 2, sides: 6 },
       },
