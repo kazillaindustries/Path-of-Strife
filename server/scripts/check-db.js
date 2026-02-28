@@ -1,5 +1,4 @@
 const { Client } = require("pg");
-const dns = require("dns").promises;
 
 const cs = process.env.DATABASE_URL;
 if (!cs) {
@@ -7,43 +6,19 @@ if (!cs) {
   process.exit(1);
 }
 
-console.log("Attempting to connect to database (forcing IPv4 lookup)...");
+console.log("Attempting to connect to database (using configured host resolution)...");
 
 async function run() {
   try {
-    // parse the connection string with the WHATWG URL parser
-    const u = new URL(cs);
-    const host = u.hostname;
-    const port = u.port ? Number(u.port) : 5432;
-    const user = decodeURIComponent(u.username || "");
-    const password = decodeURIComponent(u.password || "");
-    const database = (u.pathname || "").replace(/^\//, "") || undefined;
-
-    // Prefer IPv4 by resolving A records explicitly
-    const addresses = await dns.resolve4(host);
-    if (!addresses || addresses.length === 0) {
-      throw new Error(`No IPv4 addresses found for host ${host}`);
-    }
-    const ipv4 = addresses[0];
-    console.log('Resolved IPv4 addresses:', addresses.join(', '));
-    console.log('NODE_OPTIONS:', process.env.NODE_OPTIONS || '<unset>');
-
-    console.log(`Attempting connection to ${ipv4}:${port} as user ${user}`);
-    const client = new Client({
-      host: ipv4,
-      port,
-      user,
-      password,
-      database,
-      ssl: { rejectUnauthorized: false },
-    });
-
+    // Use the full connection string and let the system resolver handle A/AAAA
+    const client = new Client({ connectionString: cs, ssl: { rejectUnauthorized: false } });
+    console.log("Connecting using connection string host:", new URL(cs).hostname);
     await client.connect();
-    console.log("DB connection successful (IPv4)");
+    console.log("DB connection successful");
     await client.end();
   } catch (err) {
     console.error("DB connection failed — error follows:");
-    console.error(err);
+    console.error(err && err.message ? err.message : err);
     process.exit(1);
   }
 }
