@@ -8,6 +8,7 @@ import {
   levelUpCharacter,
   addXp,
 } from "../services/characterService";
+import { verifyCharacterOwnership } from "../lib/authUtils";
 import { isValidClass, ALL_CLASSES, CLASS_BASE_STATS, CLASS_PASSIVES } from "../lib/constants";
 
 const router = Router();
@@ -35,10 +36,14 @@ router.post("/", async (req: Request, res: Response) => {
         .json({ error: `Invalid class. Valid classes: ${ALL_CLASSES.join(", ")}` });
     }
 
+    const userId = (req as any).user?.id;
+    if (!userId) return res.status(403).json({ error: "Unauthorized" });
+
     const character = await createCharacter({
       name,
       class: characterClass,
       avatarUrl,
+      userId,
     });
 
     res.status(201).json(character);
@@ -48,9 +53,12 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/", async (_req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
-    const characters = await listCharacters();
+    const userId = (req as any).user?.id;
+    if (!userId) return res.status(403).json({ error: "Unauthorized" });
+
+    const characters = await listCharacters(userId);
     res.json(characters);
   } catch (error: any) {
     console.error(error);
@@ -61,6 +69,12 @@ router.get("/", async (_req: Request, res: Response) => {
 router.get("/:id", async (req: Request, res: Response) => {
   try {
     const characterId = req.params.id as string;
+    const userId = (req as any).user?.id;
+    if (!userId) return res.status(403).json({ error: "Unauthorized" });
+
+    const owns = await verifyCharacterOwnership(characterId, userId);
+    if (!owns) return res.status(403).json({ error: "Unauthorized" });
+
     const character = await getCharacterById(characterId);
     if (!character) {
       return res.status(404).json({ error: "Character not found" });
@@ -75,6 +89,12 @@ router.get("/:id", async (req: Request, res: Response) => {
 router.put("/:id", async (req: Request, res: Response) => {
   try {
     const characterId = req.params.id as string;
+    const userId = (req as any).user?.id;
+    if (!userId) return res.status(403).json({ error: "Unauthorized" });
+
+    const owns = await verifyCharacterOwnership(characterId, userId);
+    if (!owns) return res.status(403).json({ error: "Unauthorized" });
+
     const character = await updateCharacter(characterId, req.body ?? {});
     res.json(character);
   } catch (error: any) {
@@ -86,6 +106,12 @@ router.put("/:id", async (req: Request, res: Response) => {
 router.delete("/:id", async (req: Request, res: Response) => {
   try {
     const characterId = req.params.id as string;
+    const userId = (req as any).user?.id;
+    if (!userId) return res.status(403).json({ error: "Unauthorized" });
+
+    const owns = await verifyCharacterOwnership(characterId, userId);
+    if (!owns) return res.status(403).json({ error: "Unauthorized" });
+
     await deleteCharacter(characterId);
     res.status(204).send();
   } catch (error: any) {
@@ -97,6 +123,12 @@ router.delete("/:id", async (req: Request, res: Response) => {
 router.post("/:id/levelup", async (req: Request, res: Response) => {
   try {
     const characterId = req.params.id as string;
+    const userId = (req as any).user?.id;
+    if (!userId) return res.status(403).json({ error: "Unauthorized" });
+
+    const owns = await verifyCharacterOwnership(characterId, userId);
+    if (!owns) return res.status(403).json({ error: "Unauthorized" });
+
     const character = await levelUpCharacter(characterId);
     res.json(character);
   } catch (error: any) {
@@ -113,6 +145,12 @@ router.post("/:id/xp", async (req: Request, res: Response) => {
     if (typeof amount !== "number" || amount <= 0) {
       return res.status(400).json({ error: "Amount must be a positive number" });
     }
+
+    const userId = (req as any).user?.id;
+    if (!userId) return res.status(403).json({ error: "Unauthorized" });
+
+    const owns = await verifyCharacterOwnership(characterId, userId);
+    if (!owns) return res.status(403).json({ error: "Unauthorized" });
 
     const character = await addXp(characterId, amount);
     res.json(character);

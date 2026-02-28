@@ -42,13 +42,13 @@ router.get("/active/:partyId", async (req: Request, res: Response) => {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
-    const run = await prisma.run.findFirst({
-      where: { partyId, finished: false },
-    });
+    const run = await prisma.run.findFirst({ where: { partyId, finished: false } });
+    console.log(`[runs] active lookup for party=${partyId} -> run=${run ? run.id : "none"}`);
     if (!run) {
       return res.status(404).json({ error: "No active run found" });
     }
     const fullRun = await getRunById(run.id);
+    console.log(`[runs] returning active run ${fullRun?.id} for party=${partyId}`);
     res.json(fullRun);
   } catch (error: any) {
     console.error(error);
@@ -73,6 +73,7 @@ router.post("/start", async (req: Request, res: Response) => {
     }
 
     const result = await startRun(partyId);
+    console.log(`[runs] started run ${result.run?.id} for party=${partyId}`);
     res.status(201).json(result);
   } catch (error: any) {
     console.error(error);

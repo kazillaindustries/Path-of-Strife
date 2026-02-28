@@ -12,3 +12,13 @@ export async function verifyPartyOwnership(
   if (!party) return false;
   return party.userId === userId;
 }
+
+// verify that a user owns a character
+export async function verifyCharacterOwnership(
+  characterId: string,
+  userId: string,
+): Promise<boolean> {
+  const character = await prisma.character.findUnique({ where: { id: characterId } });
+  if (!character) return false;
+  return character.userId === userId;
+}

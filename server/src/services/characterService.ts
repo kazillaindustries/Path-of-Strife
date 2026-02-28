@@ -14,10 +14,11 @@ export type CharacterInput = {
   name: string;
   class: string;
   avatarUrl?: string | null;
+  userId: string;
 };
 
 export async function createCharacter(input: CharacterInput) {
-  const { name, avatarUrl } = input;
+  const { name, avatarUrl, userId } = input;
   const characterClass = input.class as CharacterClass;
 
   if (!isValidClass(characterClass)) {
@@ -38,7 +39,9 @@ export async function createCharacter(input: CharacterInput) {
     maxStamina: stats.stamina,
     xp: 0,
     battlesWon: 0,
-  };
+
+      user: { connect: { id: userId } },
+    } as any;
 
   if (avatarUrl !== undefined) {
     data.avatarUrl = avatarUrl;
@@ -47,7 +50,10 @@ export async function createCharacter(input: CharacterInput) {
   return prisma.character.create({ data });
 }
 
-export async function listCharacters() {
+export async function listCharacters(userId?: string) {
+  if (userId) {
+    return prisma.character.findMany({ where: { userId } });
+  }
   return prisma.character.findMany();
 }
 

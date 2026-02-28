@@ -12,6 +12,7 @@ model User {
   name           String?
   sessionToken   String?  @unique
   parties        Party[]
+  characters     Character[]
   createdAt      DateTime @default(now())
 }
 
@@ -20,6 +21,8 @@ model Character {
   name        String
   class       String
   avatarUrl   String?
+  userId      String
+  user        User                 @relation(fields: [userId], references: [id])
   level       Int                  @default(1)
   xp          Int                  @default(0)
   battlesWon  Int                  @default(0)
