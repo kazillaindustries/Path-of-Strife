@@ -2,6 +2,8 @@
 
 A turn-based RPG game with a React frontend and Node.js/Express backend. Players manage parties of characters, progress through multiple areas, and engage in tactical turn-based combat.
 
+The app is live and available to play at `path-of-strife.vercel.app`
+
 ## Quick Start
 
 ### Prerequisites
@@ -26,7 +28,6 @@ A turn-based RPG game with a React frontend and Node.js/Express backend. Players
    npm run dev
    ```
 
-The app will be available at ``
 
 ### Docker Compose
 
